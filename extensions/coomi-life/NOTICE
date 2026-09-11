@@ -1,0 +1,18 @@
+Coomi Life optional extension — psi-v2 cognitive engine
+
+This directory contains a self-contained cognitive engine written for Coomi.
+It uses only the Python standard library and makes no network requests.
+
+Design informed by published research (concepts only, no code reused):
+- Doerner's Psi theory: homeostatic needs driving cognition and emotion
+- Russell's circumplex model of affect: valence x arousal emotion space
+- Ebbinghaus forgetting curve and the testing effect: memory retention
+- Gottman's research on relationship positivity ratios
+
+An early prototype of this extension drew on community concepts from
+LAAP AGI (https://github.com/ywbing-xrang/laap-AGI, Apache-2.0). The
+current engine is an independent from-scratch implementation that shares
+no code with that project and does not depend on it.
+
+Copyright 2025-2026 Coomi contributors.
+Licensed under the Apache License, Version 2.0.
