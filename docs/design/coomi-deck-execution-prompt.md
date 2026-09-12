@@ -70,6 +70,8 @@
 
 ## 6. 工程现状
 
+**分支纪律**：本仓库三分支——`main`（完整源码，只做合并与发版）、`coomi-deck`（桌面端长期开发分支，**Deck 的一切工作在此进行**，开工先 `git checkout coomi-deck`）、`coomi-android`（移动端长期开发分支）。改动 `packages/` 共享代码后尽快合入 main 并同步回另一分支；完成后在 coomi-deck 分支提交（是否推送远端听用户指示）。
+
 **技术栈**（pnpm workspace）：`coomi-deck`（Vue 3 + Vite + Pinia + TS + vue-router hash 模式 + lucide-vue-next）+ `packages/tokens`。
 
 ```bash
