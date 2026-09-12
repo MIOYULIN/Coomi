@@ -1,0 +1,9 @@
+{
+  "name": "coomi",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:deck": "pnpm --filter @coomi/deck dev",
+    "build:deck": "pnpm --filter @coomi/deck build"
+  }
+}

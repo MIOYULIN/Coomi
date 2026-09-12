@@ -1,0 +1,235 @@
+/*
+  Coomi Deck 设计令牌 —— 四套主题共用语义层。
+  语义规则贯穿全部主题：冷蓝 = 机器流转（Coomi/代理/自动化），暖橙 = 人工决策点（审批/异常介入）。
+
+  主题：
+  - tower  静塔：中性近黑工程控制台（默认）
+  - ink    暖墨：暖调书房感深色
+  - bridge 舰桥：深海军蓝，数据可视化取向
+  - paper  蓝白：与 Coomi Android 移动端完全一致的蓝白设计语言
+*/
+
+:root {
+  /* ── 静态令牌（四主题共享） ── */
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
+    "HarmonyOS Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  --dur-1: 0.12s;
+  --dur-2: 0.2s;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  --r-pill: 999px;
+}
+
+/* ═══════════════════════ 静塔 tower（默认） ═══════════════════════ */
+:root,
+[data-theme="tower"] {
+  color-scheme: dark;
+
+  --bg: #0e1013;
+  --surface: #14171c;
+  --surface-2: #1a1e25;
+  --fill: #1a1e25;
+  --fill-strong: #22262f;
+  --fill-press: #272c37;
+  --border: #232832;
+  --border-strong: #333a47;
+
+  --text: #e7e9ed;
+  --text-2: #99a0ac;
+  --text-3: #646c79;
+
+  --accent: #5b8def;
+  --accent-press: #7ca6f4;
+  --accent-soft: rgba(91, 141, 239, 0.13);
+  --accent-soft-2: rgba(91, 141, 239, 0.22);
+  --accent-border: rgba(91, 141, 239, 0.36);
+  --on-accent: #0b1322;
+
+  --human: #e08a6d;
+  --human-press: #eba184;
+  --human-soft: rgba(224, 138, 109, 0.13);
+  --human-border: rgba(224, 138, 109, 0.36);
+  --on-human: #221310;
+
+  --ok: #45b581;
+  --ok-soft: rgba(69, 181, 129, 0.13);
+  --warn: #d9a441;
+  --warn-soft: rgba(217, 164, 65, 0.13);
+  --danger: #e06d5d;
+  --danger-soft: rgba(224, 109, 93, 0.12);
+  --danger-border: rgba(224, 109, 93, 0.36);
+
+  --code-bg: #171b21;
+
+  --r-lg: 10px;
+  --r-md: 8px;
+  --r-sm: 6px;
+  --r-btn: 8px;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.32);
+  --shadow-2: 0 10px 32px rgba(0, 0, 0, 0.48);
+  --ring: 0 0 0 3px rgba(91, 141, 239, 0.25);
+  --glow: none;
+  --app-texture: none;
+}
+
+/* ═══════════════════════ 暖墨 ink ═══════════════════════ */
+[data-theme="ink"] {
+  color-scheme: dark;
+
+  --bg: #161310;
+  --surface: #1e1a16;
+  --surface-2: #26211c;
+  --fill: #26211c;
+  --fill-strong: #2e2822;
+  --fill-press: #352e27;
+  --border: #302a23;
+  --border-strong: #3f372d;
+
+  --text: #ece4d6;
+  --text-2: #ab9f8d;
+  --text-3: #7e7364;
+
+  --accent: #82a5cf;
+  --accent-press: #9dbbdd;
+  --accent-soft: rgba(130, 165, 207, 0.13);
+  --accent-soft-2: rgba(130, 165, 207, 0.2);
+  --accent-border: rgba(130, 165, 207, 0.32);
+  --on-accent: #121a24;
+
+  --human: #dc9269;
+  --human-press: #e6a683;
+  --human-soft: rgba(220, 146, 105, 0.13);
+  --human-border: rgba(220, 146, 105, 0.34);
+  --on-human: #241510;
+
+  --ok: #7ab38c;
+  --ok-soft: rgba(122, 179, 140, 0.13);
+  --warn: #cfa35c;
+  --warn-soft: rgba(207, 163, 92, 0.13);
+  --danger: #d07f6a;
+  --danger-soft: rgba(208, 127, 106, 0.12);
+  --danger-border: rgba(208, 127, 106, 0.34);
+
+  --code-bg: #211c17;
+
+  --r-lg: 12px;
+  --r-md: 9px;
+  --r-sm: 7px;
+  --r-btn: 9px;
+
+  --shadow-1: 0 1px 2px rgba(18, 12, 6, 0.4);
+  --shadow-2: 0 10px 32px rgba(18, 12, 6, 0.55);
+  --ring: 0 0 0 3px rgba(130, 165, 207, 0.22);
+  --glow: none;
+  --app-texture: none;
+}
+
+/* ═══════════════════════ 舰桥 bridge ═══════════════════════ */
+[data-theme="bridge"] {
+  color-scheme: dark;
+
+  --bg: #090d18;
+  --surface: #0f1526;
+  --surface-2: #151d33;
+  --fill: #151d33;
+  --fill-strong: #1b2542;
+  --fill-press: #212c4e;
+  --border: #212c4d;
+  --border-strong: #2f3d68;
+
+  --text: #e0e7f8;
+  --text-2: #93a0c4;
+  --text-3: #5f6b92;
+
+  --accent: #4f8dff;
+  --accent-press: #78a9ff;
+  --accent-soft: rgba(79, 141, 255, 0.16);
+  --accent-soft-2: rgba(79, 141, 255, 0.26);
+  --accent-border: rgba(79, 141, 255, 0.44);
+  --on-accent: #06122b;
+  --accent-2: #3cc4d8;
+
+  --human: #e49a6f;
+  --human-press: #ecaf8b;
+  --human-soft: rgba(228, 154, 111, 0.14);
+  --human-border: rgba(228, 154, 111, 0.38);
+  --on-human: #26140a;
+
+  --ok: #3fd598;
+  --ok-soft: rgba(63, 213, 152, 0.14);
+  --warn: #e2b44e;
+  --warn-soft: rgba(226, 180, 78, 0.14);
+  --danger: #f07a66;
+  --danger-soft: rgba(240, 122, 102, 0.13);
+  --danger-border: rgba(240, 122, 102, 0.38);
+
+  --code-bg: #0c1222;
+
+  --r-lg: 8px;
+  --r-md: 7px;
+  --r-sm: 5px;
+  --r-btn: 7px;
+
+  --shadow-1: 0 1px 2px rgba(2, 6, 18, 0.5);
+  --shadow-2: 0 10px 36px rgba(2, 6, 18, 0.65);
+  --ring: 0 0 0 3px rgba(79, 141, 255, 0.28);
+  --glow: 0 0 14px rgba(79, 141, 255, 0.35);
+  --app-texture: radial-gradient(rgba(79, 141, 255, 0.055) 1px, transparent 1px);
+  --app-texture-size: 22px 22px;
+}
+
+/* ═══════════════════════ 蓝白 paper（Coomi Android 设计语言） ═══════════════════════ */
+[data-theme="paper"] {
+  color-scheme: light;
+
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #ffffff;
+  --fill: #f5f6f8;
+  --fill-strong: #edeff3;
+  --fill-press: #e5e8ee;
+  --border: #e7e9ee;
+  --border-strong: #dadde4;
+
+  --text: #1b1e23;
+  --text-2: #5c6270;
+  --text-3: #9096a2;
+
+  --accent: #2d61c6;
+  --accent-press: #24509f;
+  --accent-soft: #eaf0fc;
+  --accent-soft-2: #dce7f9;
+  --accent-border: #c6d7f4;
+  --on-accent: #ffffff;
+
+  --human: #d47458;
+  --human-press: #bd6148;
+  --human-soft: #fcf1ec;
+  --human-border: #f0d5c9;
+  --on-human: #ffffff;
+
+  --ok: #1f9d6b;
+  --ok-soft: #e9f7f1;
+  --warn: #b7791f;
+  --warn-soft: #fbf3e4;
+  --danger: #d9503f;
+  --danger-soft: #fceeec;
+  --danger-border: #f4cfc9;
+
+  --code-bg: #f5f6f8;
+
+  --r-lg: 16px;
+  --r-md: 12px;
+  --r-sm: 9px;
+  --r-btn: 999px;
+
+  --shadow-1: 0 1px 2px rgba(23, 32, 54, 0.05), 0 2px 8px rgba(23, 32, 54, 0.04);
+  --shadow-2: 0 6px 24px rgba(23, 32, 54, 0.1);
+  --ring: 0 0 0 3px rgba(45, 97, 198, 0.16);
+  --glow: none;
+  --app-texture: none;
+}
