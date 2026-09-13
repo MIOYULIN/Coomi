@@ -39,11 +39,25 @@ watch(() => studio.currentStudio, (s) => {
   sharedDir.value = s.sharedDir ?? ''
   hostId.value = s.hostId ?? ''
   members.value = s.members.map(m => ({ ...m }))
+  backfillMemberDefaults()
 }, { immediate: true })
 
+/** 为新成员（或尚未选中提供商/模型的成员）补上第一个已配置的提供商与模型，保证剧场开演有模型可选。 */
+function backfillMemberDefaults() {
+  const fallback = config.providers.find(p => p.hasKey && p.models.length > 0)
+  if (!fallback) return
+  for (const m of members.value) {
+    if (!m.providerId) m.providerId = fallback.id
+    if (!m.model) m.model = fallback.models[0] ?? ''
+  }
+}
+
+// 提供商数据异步到达时（新建页挂载即拉取），给空模型成员补默认值
+watch(() => config.providers, backfillMemberDefaults)
+
 onMounted(async () => {
-  if (isNew.value) return
-  if (studioId.value) {
+  if (config.providers.length === 0) await config.fetchProviders()
+  if (!isNew.value && studioId.value) {
     await studio.fetchStudio(studioId.value)
     await studio.fetchWorkItems()
   }
