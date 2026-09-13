@@ -1990,11 +1990,16 @@ async fn studio_send_message(
             let Some(member) = members.iter().find(|member| member.id == target_id).cloned() else { continue };
             let emit = |event: Value| { let _ = tx.send(Ok(studio_sse_event(event))); };
             emit(json!({"event_type":"studio_member_status","member_id":member.id,"status":"thinking"}));
-            let selector = format!("{}:{}", member.provider_id, member.model);
-            let provider_config = match registry.resolve(Some(&selector)) {
+            // 成员未配置提供商/模型（旧数据或未保存的成员）时回退到当前激活提供商，
+            // 避免 selector 形如 ":" 导致 "model selector is not present in providers.json"。
+            let selector = (!member.provider_id.is_empty() && !member.model.is_empty())
+                .then(|| format!("{}:{}", member.provider_id, member.model));
+            let provider_config = match registry.resolve(selector.as_deref()) {
                 Ok(value) => value,
                 Err(error) => { emit(json!({"event_type":"studio_member_status","member_id":member.id,"status":"failed"})); emit(json!({"event_type":"studio_error","message":format!("成员模型不可用：{error}")})); continue; }
             };
+            let resolved_provider_id = provider_config.id.clone();
+            let resolved_model = provider_config.model.clone();
             let provider = match HttpModelProvider::new(provider_config) {
                 Ok(value) => value,
                 Err(error) => { emit(json!({"event_type":"studio_member_status","member_id":member.id,"status":"failed"})); emit(json!({"event_type":"studio_error","message":format!("成员模型初始化失败：{error}")})); continue; }
@@ -2028,7 +2033,7 @@ async fn studio_send_message(
             agent_prompt.push_str("\n\n"); agent_prompt.push_str(&system);
             let mcp_runtime = Arc::new(McpRuntime::load(&home).await);
             let tools = CoreTools::new(cwd.clone(), policy).with_skills_directory(home.join("skills")).with_config_home(home.clone()).with_mcp_runtime(mcp_runtime).with_memory(Arc::new(MemoryManager::new(&home, &cwd)));
-            let mut session = Session::new(member.provider_id.clone(), member.model.clone(), cwd);
+            let mut session = Session::new(resolved_provider_id, resolved_model, cwd);
             let observer = StudioAgentObserver { sender: tx.clone(), member_id: member.id.clone() };
             let approval = StudioApproval { sender:tx.clone(), approvals:Arc::clone(&approvals), member_id:member.id.clone(), member_name:member.name.clone(), permission:member.tool_permission };
             match Agent::new(agent_prompt).with_max_tool_rounds(64).with_reasoning_effort("medium").run_turn(&mut session, user, &provider, &tools, &approval, &observer).await {
