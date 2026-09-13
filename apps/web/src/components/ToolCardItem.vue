@@ -1,3 +1,14 @@
+<script lang="ts">
+/**
+ * 手动展开状态的存放处（模块级，跨组件实例共享）。
+ * 不能放 <script setup> 的本地变量 —— 那是每个实例各一份；也不能只依赖
+ * card.expanded —— 虚拟列表会把滚出视口的组件销毁重建，实例状态随之丢失，
+ * 表现为「点开了又自己合上」。card 对象（store 原地 mutate、引用稳定）
+ * 作为 WeakMap 的键，组件重建后原样恢复，也不污染 store 数据结构。
+ */
+const manualStore = new WeakMap<object, boolean>()
+</script>
+
 <script setup lang="ts">
 /**
  * 工具调用卡片。
@@ -17,7 +28,6 @@ const props = defineProps<{ card: ToolCard }>()
 /** 大字段单独成块，不塞进参数表。 */
 const BIG = new Set(['content', 'old_string', 'new_string', 'prompt'])
 
-const manual = ref<boolean | null>(null)
 const full = ref(false)
 const copied = ref(false)
 
@@ -203,10 +213,13 @@ const diffLines = computed(() => {
 })
 
 const hasBody = computed(() => argRows.value.length > 0 || Boolean(contentArg.value) || isDiff.value || Boolean(output.value) || Boolean(liveOutput.value) || Boolean(props.card.riskSummary) || (props.card.images?.length ?? 0) > 0 || Boolean(props.card.imageMissing))
-const open = computed(() => manual.value ?? props.card.expanded ?? false)
+const open = computed({
+  get: () => manualStore.get(props.card) ?? props.card.expanded ?? false,
+  set: value => { manualStore.set(props.card, value) },
+})
 const long = computed(() => output.value.length > 700 || output.value.split('\n').length > 14)
 
-function toggle() { if (hasBody.value) manual.value = !open.value }
+function toggle() { if (hasBody.value) open.value = !open.value }
 
 async function copy(text: string) {
   try {
