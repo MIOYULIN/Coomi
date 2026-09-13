@@ -74,9 +74,10 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Build APK (assembleDebug)
-        # apkVersionTag 让产物文件名带 fix1 标记（coomi-app_fix1-debug_arm64-v8a.apk），
+        # TERMUX_APK_VERSION_TAG 是环境变量（build.gradle 用 System.getenv 读取），
+        # 让产物文件名带 fix1 标记（coomi-app_fix1-debug_arm64-v8a.apk），
         # 与历史包彻底区分，避免同名文件导致装错旧包。
-        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace -PapkVersionTag=fix1-debug
+        run: TERMUX_APK_VERSION_TAG=fix1-debug ./gradlew :app:assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
