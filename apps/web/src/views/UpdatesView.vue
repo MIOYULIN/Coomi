@@ -29,6 +29,20 @@ const info = ref<UpdateInfo | null>(null)
 
 const canInstall = computed(() => Boolean(window.CoomiAndroid?.installApk))
 
+// 更新说明支持多版本分段：以「vX.Y.Z 更新说明【…】」标题行为分段边界。
+// 首段为当前版本说明常驻显示，历史段落默认收起，点「展开全部更新记录」逐段展开。
+const NOTE_SECTION_RE = /^v\d+\.\d+\.\d+[^\n]*更新说明[^\n]*$/gm
+const noteSections = computed<string[]>(() => {
+  const notes = info.value?.notes ?? ''
+  if (!notes.trim()) return []
+  const heads = [...notes.matchAll(NOTE_SECTION_RE)].map((m) => m.index ?? 0)
+  if (heads.length === 0 || heads[0] !== 0) return [notes.trim()]
+  return heads.map((start, i) => notes.slice(start, heads[i + 1] ?? notes.length).trim()).filter(Boolean)
+})
+const latestNotes = computed(() => noteSections.value[0] ?? (info.value?.notes ?? '').trim())
+const historyNotes = computed(() => noteSections.value.slice(1))
+const historyExpanded = ref(false)
+
 // 批次七 #9：与当前版本比对——更新页明确给出「已是最新 / 有新版本」状态，
 // 已是最新时隐藏下载按钮（旧版会重复下载同版本包）。
 const hasUpdate = computed(() => Boolean(info.value && info.value.versionCode > currentCode.value))
@@ -43,6 +57,7 @@ async function refresh() {
   loading.value = true
   error.value = ''
   info.value = null
+  historyExpanded.value = false
   const dir = CHANNELS[channel.value].dir
   try {
     const response = await fetch(`${dir}/latest.json`, { cache: 'no-store' })
@@ -152,7 +167,13 @@ onMounted(() => {
           <div class="line"><span>最新版本</span><strong>v{{ info.version }}（build {{ info.versionCode }}）</strong></div>
           <div v-if="info.date" class="line"><span>发布日期</span><strong>{{ info.date }}</strong></div>
           <div class="line"><span>本地版本</span><strong>{{ currentVersionName || '—' }}（build {{ currentCode || '—' }}）</strong></div>
-          <div v-if="info.notes" class="notes">{{ info.notes }}</div>
+          <div v-if="latestNotes" class="notes">{{ latestNotes }}</div>
+          <template v-if="historyNotes.length">
+            <div v-for="(section, i) in historyNotes" :key="i" v-show="historyExpanded" class="notes notes-history">{{ section }}</div>
+            <button class="history-toggle" @click="historyExpanded = !historyExpanded">
+              {{ historyExpanded ? '收起更新记录' : `展开全部更新记录（含 ${historyNotes.length} 条历史版本）` }}
+            </button>
+          </template>
         </section>
 
         <button v-if="hasUpdate" class="primary" :disabled="installing || !canInstall" @click="install">
@@ -196,6 +217,11 @@ onMounted(() => {
 .line span { color: var(--text-3); }
 .line strong { color: var(--text); }
 .notes { padding: 12px 13px; font-size: 12.5px; line-height: 1.6; color: var(--text-2); white-space: pre-wrap; word-break: break-word; }
+.notes-history { border-top: 1px dashed var(--border); color: var(--text-3); }
+.history-toggle {
+  width: 100%; padding: 10px 13px; border-top: 1px solid var(--border);
+  background: var(--fill); color: var(--blue); font-size: 12.5px;
+}
 .primary, .secondary { display: inline-flex; align-items: center; justify-content: center; width: 100%; height: 44px; border-radius: 10px; background: var(--blue); color: #fff; font-size: 14px; }
 .primary:disabled { opacity: 0.55; }
 </style>

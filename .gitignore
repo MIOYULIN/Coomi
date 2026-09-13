@@ -62,3 +62,7 @@ java_pid*.hprof
 scripts/__pycache__/
 __pycache__/
 *.py[cod]
+
+# ---- Coomi Deck (desktop) ----
+node_modules/
+coomi-deck/dist/
