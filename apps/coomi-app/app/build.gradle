@@ -71,9 +71,11 @@ android {
         applicationId coomiPackageName
         minSdkVersion project.properties.minSdkVersion.toInteger()
         targetSdkVersion coomiTargetSdk
-        // Keep the executable Termux bootstrap security domain for v1.4.0.
-        versionCode 69
-        versionName "1.4.8-test.3"
+        // fix1：修复工具调用卡片无法展开（非响应式展开状态 + 流式期间组件重建风暴）。
+        // versionCode 必须 > 69：旧包覆盖安装后系统才认作升级；用户可在
+        // 系统设置→应用→Coomi 里凭版本号 1.4.8-test.3-fix1 确认装的是修复版。
+        versionCode 70
+        versionName "1.4.8-test.3-fix1"
 
         if (appVersionName) versionName = appVersionName
         validateVersionName(versionName)
