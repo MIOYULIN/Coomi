@@ -1,11 +1,16 @@
 <script lang="ts">
+import { reactive } from 'vue'
+
 /**
  * 组的手动开合状态存放处（模块级，跨组件实例共享）。
  * 以组 key（首个工具 callId）为键 —— 不能放 <script setup> 的本地变量
  * （每个实例各一份）：虚拟列表回收重建组件后状态仍在，
  * 「用户手动点过之后就听用户的」这条约定才能真正跨回收生效。
+ *
+ * 必须是 reactive Map：普通 Map 不是响应式数据源，computed 不追踪它的
+ * 变化，点击后状态写了、界面永远不更新——这正是「工具调用点不开」的根因。
  */
-const groupManual = new Map<string, boolean>()
+const groupManual = reactive(new Map<string, boolean>())
 </script>
 
 <script setup lang="ts">

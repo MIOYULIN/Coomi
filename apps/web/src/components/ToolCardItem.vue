@@ -1,12 +1,9 @@
 <script lang="ts">
 /**
- * 手动展开状态的存放处（模块级，跨组件实例共享）。
- * 不能放 <script setup> 的本地变量 —— 那是每个实例各一份；也不能只依赖
- * card.expanded —— 虚拟列表会把滚出视口的组件销毁重建，实例状态随之丢失，
- * 表现为「点开了又自己合上」。card 对象（store 原地 mutate、引用稳定）
- * 作为 WeakMap 的键，组件重建后原样恢复，也不污染 store 数据结构。
+ * 手动展开状态存放在 card.manualOpen（见 viewModel.ts）。
+ * 注意：必须写进 card 这个响应式代理对象，computed 才会重算——
+ * 任何非响应式容器（普通 Map/WeakMap）都会让点击后界面永远不更新。
  */
-const manualStore = new WeakMap<object, boolean>()
 </script>
 
 <script setup lang="ts">
@@ -214,8 +211,11 @@ const diffLines = computed(() => {
 
 const hasBody = computed(() => argRows.value.length > 0 || Boolean(contentArg.value) || isDiff.value || Boolean(output.value) || Boolean(liveOutput.value) || Boolean(props.card.riskSummary) || (props.card.images?.length ?? 0) > 0 || Boolean(props.card.imageMissing))
 const open = computed({
-  get: () => manualStore.get(props.card) ?? props.card.expanded ?? false,
-  set: value => { manualStore.set(props.card, value) },
+  // 读写 card 对象上的响应式字段 manualOpen（viewModel.ts 定义）。
+  // card 来自 Pinia store，是响应式代理——写字段会触发依赖它的 computed 重算。
+  // （曾把状态存进 WeakMap：非响应式容器，写完界面永远不更新，点不开。）
+  get: () => props.card.manualOpen ?? props.card.expanded ?? false,
+  set: value => { props.card.manualOpen = value },
 })
 const long = computed(() => output.value.length > 700 || output.value.split('\n').length > 14)
 
