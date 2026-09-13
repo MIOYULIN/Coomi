@@ -64,6 +64,9 @@ function syncScrollHost() {
 }
 
 const blocks = computed<TimelineBlockItem[]>(() => buildTimelineBlocks(session.timeline))
+/** 已播放入场动画的 item key 集合：防止 vue-virtual-scroller 回收时重播 rise-in */
+const animatedKeys = ref<Record<string, boolean>>({})
+function markAnimated(key: string) { animatedKeys.value[key] = true }
 
 // ── 会话内搜索：关键词匹配时间线消息，跳转并高亮 ──
 const searchOpen = ref(false)
@@ -286,7 +289,7 @@ watch(() => session.pendingQuestion?.callId, (id, previous) => {
             <DynamicScrollerItem
               :item="item"
               :active="active"
-              :size-dependencies="[item, item.t === 'one' ? item.item : item.cards]"
+              :size-dependencies="[item.key]"
               :data-index="index"
               class="virtual-item"
               :class="{ 'search-hit': highlightIndex === index }"
@@ -294,7 +297,7 @@ watch(() => session.pendingQuestion?.callId, (id, previous) => {
               @resize="follow"
             >
               <!-- 入场动画放内层：外层节点由虚拟滚动管理 transform，动画会覆盖定位 -->
-              <div class="rise-in" :style="{ '--i': Math.min(index, 6) }">
+              <div class="rise-in" :class="{ 'rise-done': animatedKeys[item.key] }" :style="{ '--i': Math.min(index, 6) }" @animationend="markAnimated(item.key)">
                 <TimelineBlock :block="item" />
               </div>
             </DynamicScrollerItem>
@@ -413,6 +416,8 @@ watch(() => session.pendingQuestion?.callId, (id, previous) => {
   -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain;
 }
 .virtual-item { width: 100%; min-width: 0; padding-bottom: 12px; }
+/* rise-in 动画播完一次后锁定，防止虚拟滚动回收时重播导致闪烁 */
+.rise-in.rise-done { animation: none; opacity: 1; transform: none; }
 
 .to-bottom {
   position: absolute; left: 50%; bottom: 116px; z-index: 8;

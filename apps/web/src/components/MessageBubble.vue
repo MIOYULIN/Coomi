@@ -259,7 +259,7 @@ async function saveToMemory() {
           <span>{{ speaking ? '停止' : '朗读' }}</span>
         </button>
       </div>
-      <div v-for="(h, i) in blocks" :key="i" class="md blk card-blk cascade" v-html="h" @click="onBlockClick" />
+      <div v-for="(h, i) in blocks" :key="i" class="md blk card-blk" v-html="h" @click="onBlockClick" />
       <FileInline v-if="filePaths.length" :paths="filePaths" />
       <span v-if="streaming" class="stream-caret" />
       <div v-if="isEgg" class="life-card-foot">
@@ -278,7 +278,7 @@ async function saveToMemory() {
           <span>{{ speaking ? '停止' : '朗读' }}</span>
         </button>
       </div>
-      <div v-for="(h, i) in blocks" :key="i" class="md blk cascade" v-html="h" @click="onBlockClick" />
+      <div v-for="(h, i) in blocks" :key="i" class="md blk" v-html="h" @click="onBlockClick" />
       <FileInline v-if="filePaths.length" :paths="filePaths" />
       <span v-if="streaming" class="stream-caret" />
     </template>

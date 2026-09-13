@@ -13,6 +13,8 @@ const REATTACH_PX = 14
 const SAME_POS_PX = 2
 /** 「回到底部」的平滑滚动期间不判定脱离 —— 那一路的 scroll 事件都是我们自己发的。 */
 const SMOOTH_MS = 800
+/** follow() 最小执行间隔（ms）：防止流式期间高频触发导致视觉抖动。 */
+const FOLLOW_THROTTLE_MS = 48
 
 /**
  * @param shouldFollow 是否允许「贴底」滚动。空态等场景传 false 时，
@@ -25,6 +27,7 @@ export function useAutoScroll(target: Ref<HTMLElement | null>, shouldFollow: () 
   let pinnedTop = -1
   let suppressUntil = 0
   let boundTarget: HTMLElement | null = null
+  let lastFollowAt = 0
 
   function distanceFromBottom(el: HTMLElement): number {
     return el.scrollHeight - el.scrollTop - el.clientHeight
@@ -54,8 +57,18 @@ export function useAutoScroll(target: Ref<HTMLElement | null>, shouldFollow: () 
   function follow() {
     if (!following.value) return
     if (raf) return
+    // 流式期间高频触发时跳过过近的帧，减少滚动抖动。
+    const now = performance.now()
+    if (now - lastFollowAt < FOLLOW_THROTTLE_MS) {
+      // 延迟到间隔满足后再执行，保证最终状态正确。
+      if (!raf) {
+        raf = requestAnimationFrame(() => { raf = 0; follow() })
+      }
+      return
+    }
     raf = requestAnimationFrame(() => {
       raf = 0
+      lastFollowAt = performance.now()
       const el = boundTarget
       if (!el || !following.value) return
       if (!shouldFollow()) {

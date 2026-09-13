@@ -30,9 +30,9 @@ const cls = computed(() => (active.value ? 'run' : failed.value ? 'err' : 'ok'))
 </script>
 
 <template>
-  <ToolCardItem v-if="cards.length === 1" :card="cards[0]" class="cascade" />
+  <ToolCardItem v-if="cards.length === 1" :card="cards[0]" />
 
-  <div v-else class="group cascade" :class="cls">
+  <div v-else class="group" :class="cls">
     <button class="ghead" @click="manual = !open">
       <span class="gicon" :class="cls"><CoomiIcon name="wrench" :size="16" /></span>
       <span class="gtitle">工具调用 · {{ cards.length }}</span>

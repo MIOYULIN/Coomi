@@ -206,7 +206,7 @@ const hasBody = computed(() => argRows.value.length > 0 || Boolean(contentArg.va
 const open = computed(() => manual.value ?? props.card.expanded ?? false)
 const long = computed(() => output.value.length > 700 || output.value.split('\n').length > 14)
 
-function toggle() { if (hasBody.value) manual.value = !open.value }
+function toggle() { manual.value = !open.value }
 
 async function copy(text: string) {
   try {
@@ -229,7 +229,7 @@ async function copy(text: string) {
 
 <template>
   <div class="tool" :class="[st.cls, { open }]">
-    <button class="head" :class="{ tapable: hasBody }" @click="toggle">
+    <button class="head"  @click="toggle">
       <span class="tile" :class="st.cls">
         <CoomiIcon :name="meta.icon" :size="17" />
         <span v-if="st.spin" class="ring" />
@@ -246,7 +246,7 @@ async function copy(text: string) {
         <span v-if="card.elapsed != null" class="ms">{{ card.elapsed.toFixed(1) }}s</span>
       </span>
 
-      <CoomiIcon v-if="hasBody" name="chevronRight" :size="14" class="chev" :class="{ open }" />
+      <CoomiIcon name="chevronRight" :size="14" class="chev" :class="{ open }" />
     </button>
 
     <div v-if="card.status === 'awaiting_approval'" class="risk">
@@ -254,7 +254,7 @@ async function copy(text: string) {
       <span>{{ card.riskSummary || '需要你授权后才会执行' }}<template v-if="card.access"> · {{ card.access }}</template></span>
     </div>
 
-    <div v-if="open && hasBody" class="body">
+    <div v-if="open" class="body">
       <!-- 图片瀑布流：工具产生的图片平铺展示，点击全屏预览 -->
       <div v-if="card.images && card.images.length" class="sec" :class="{ showimg: isShowImage }">
         <p class="slabel">图片</p>
@@ -323,6 +323,11 @@ async function copy(text: string) {
           {{ full ? '收起' : '展开全部' }}
         </button>
       </div>
+        <!-- 空态 placeholder：工具已执行但无可展示内容 -->
+        <div v-if="!hasBody" class="sec">
+          <p class="slabel">状态</p>
+          <p class="empty-hint">工具已{{ st.cls === 'ok' ? '成功执行' : st.cls === 'err' ? '执行失败' : '执行完毕' }}，无详细参数或输出</p>
+        </div>
     </div>
 
     <!-- 全屏图片预览：点击放大 / 另存为 -->
@@ -372,7 +377,7 @@ async function copy(text: string) {
   width: 100%; min-height: 46px; padding: 8px 11px;
   border: 0; background: none; text-align: left;
 }
-.head.tapable:active { background: var(--fill); }
+.head:active { background: var(--fill); }
 
 .tile {
   position: relative; display: grid; place-items: center; flex-shrink: 0;
@@ -536,4 +541,6 @@ async function copy(text: string) {
 }
 .iv-btn:active { background: rgba(255, 255, 255, .2); }
 .iv-btn.primary { background: var(--blue); }
+
+.empty-hint { font-size: 12px; color: var(--text-3); line-height: 1.5; }
 </style>
