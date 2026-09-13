@@ -659,7 +659,7 @@
             <span class="download-arrow" aria-hidden="true">↓</span>
             <span data-download-label="desktop">下载 Windows 版</span>
           </a>
-          <a class="button button-secondary" href="https://updates.septemc.com/coomi/android_test/Coomi-Android-arm64-v1.4.6-test.16.apk" data-stat-action="download-test">下载测试版</a>
+          <a class="button button-secondary" href="https://updates.septemc.com/coomi/android_test/Coomi-Android-arm64-v1.4.8-test.3.apk" data-stat-action="download-test">下载测试版</a>
         </div>
         <p class="star-link"><a href="https://github.com/TensorHub-ORG/Coomi" target="_blank" rel="noreferrer">去 GitHub 上为我们点颗星 →</a></p>
       </div>
@@ -921,7 +921,37 @@
       <div data-channel-panel="test" hidden>
 
         
-              <h2 class="changelog-title">v1.4.6-test.16 更新说明【测试】</h2>
+              <h2 class="changelog-title">v1.4.8-test.3 更新说明【测试】</h2>
+              <p class="changelog-sub">2026-09-13 发布</p>
+              <ul class="changelog-list">
+                <li><strong>Git 面板</strong>（合并社区 PR #23）：工作区版本管理五标签页（改动 / 分支 / 历史 / 临时收纳 / 同步），diff 行级着色，提交 / 拉取 / 推送 / Stash、PR 描述生成与 A/B 方案对比；不触碰暂存区的轮次存档点快照 + 定时快照调度，配合还原页可逐快照回滚。</li>
+                <li><strong>Git AI 助手</strong>：提交信息生成、变更总结、代码审查、对抗性盲点审查、根因分析、冲突解决建议、README 生成与可应用的结构化修复补丁；模型不可用时自动降级为启发式文本，不阻塞面板。</li>
+                <li><strong>Agent Git 工具</strong>：<code>git_status</code> / <code>git_diff</code> / <code>git_commit</code> / <code>git_snapshot</code> / <code>git_restore</code> 等九件套接入 Agent，写操作需用户审批，还原前自动打备份快照。</li>
+                <li><strong>数据 / 运维面板</strong>：会话搜索与 Markdown 导出、按日用量统计、网络诊断、存储占用与 guest 工具检查。</li>
+                <li><strong>角色剧场修复与全局动效</strong>：工作室编辑器补齐默认提供商 / 模型，旧数据成员未配置模型时回退激活提供商，消除空 selector 报错；全局升级弹簧回弹动效（标签滑块、按压反馈、消息入场、路由过渡）。</li>
+                <li><strong>合入时修正</strong>：剔除社区 PR 误替换的签名密钥（保持官方签名，可覆盖升级）；App 的 DeepSeek 账号登录不受影响（PR 仅移除 Git AI 的 DeepSeek 专属通道）。App 内检查更新页新增多版本说明收起，点「展开全部更新记录」查看历史版本。</li>
+              </ul>
+              <h2 class="changelog-title" style="margin-top:14px;font-size:14px;color:var(--dim)">v1.4.8-test.2 更新说明【测试】</h2>
+              <p class="changelog-sub">2026-09-11 发布</p>
+              <ul class="changelog-list">
+                <li><strong>数字生命体 psi-v2 认知引擎</strong>（合并社区 PR #21）：内稳态需求驱动、Russell 环状情绪模型、多因子羁绊关系、情景记忆（TF-IDF 检索 + 艾宾浩斯遗忘）、记挂事项议程、心情镜像、做梦与怀旧时间线；引擎重写为纯 Python 标准库实现，扩展安装不再需要设备联网装包（移除 numpy/aiohttp 依赖）。</li>
+                <li><strong>成长档案</strong>：人格徽章、羁绊进度、五维需求雷达、里程碑时间线，「数字生命体」页新增入口。</li>
+                <li><strong>对话时光机</strong>：按月历回看历史会话，当天会话数高亮并标注当日情绪，可将某天会话一键改写成小说 / 剧本 / 漫画。</li>
+                <li><strong>角色剧场</strong>：温柔、高冷等人格预设，可一键添加为 AI 工作室剧场演员。</li>
+                <li><strong>连接健壮性</strong>：WebSocket 重试耗尽后进入停摆态、网络恢复自动复活；连接建立前发送的消息不再被静默丢弃。</li>
+                <li><strong>引擎重启修复延续</strong>：包含 1.4.8-test.1 的重启风暴全套修复（状态机补边、恢复不阻断、快速崩溃熔断、反馈节流）。</li>
+                <li><strong>合入时修正</strong>：剔除社区 PR 误替换的签名密钥（保持官方签名，确保可覆盖升级）；修复 sidecar 在非 UTF-8 平台的输出编码缺陷（官方测试套件 68/68 通过）。语音朗读为预留能力，原生桥将在后续版本提供。</li>
+              </ul>
+              <h2 class="changelog-title" style="margin-top:14px;font-size:14px;color:var(--dim)">v1.4.8-test.1 更新说明【测试】</h2>
+              <p class="changelog-sub">2026-09-11 发布</p>
+              <ul class="changelog-list">
+                <li><strong>引擎反复重启修复（关键）</strong>：修复引擎重启恢复时，磁盘上遗留的「已入队未运行」任务会让引擎启动即崩溃的问题；该缺陷叠加自动拉起机制形成重启死循环，1.4.7 反馈中约 96% 的「引擎异常自动重启 / 启动失败」均源于此，本版彻底修复。</li>
+                <li><strong>崩溃循环熔断</strong>：引擎若在启动后短时间内再次崩溃，连续 5 次后停止自动重启并提示手动重启，不再无限循环；重启计数仅在引擎稳定运行 90 秒后才清零，避免「启动即崩」绕过熔断。</li>
+                <li><strong>反馈通道保护</strong>：同一原因的重启反馈 5 分钟内只记录一条，避免重启死循环场景下刷爆反馈队列（此前两台设备各产生数百条重复反馈）。</li>
+                <li><strong>诊断信息修复</strong>：引擎版本号读取增加格式校验，引导脚本的异常输出不再污染诊断数据（此前约 39% 的反馈丢失引擎版本信息）。</li>
+                <li><strong>运行时升级恢复收敛</strong>：引擎不再被重启循环打断后，内置运行时自动升级可正常完成，旧引擎（含已知的 UTF-8 输出崩溃问题）将随升级自动更新到修复版。</li>
+              </ul>
+              <h2 class="changelog-title" style="margin-top:14px;font-size:14px;color:var(--dim)">v1.4.6-test.16 更新说明【测试】</h2>
               <p class="changelog-sub">2026-09-09 发布</p>
               <ul class="changelog-list">
                 <li><strong>体验改进计划</strong>：「不要再出现」改为引擎侧持久化——修复 WebView 按随机端口隔离存储导致重启后提示复现的问题；计划页新增「会话页邀请提示」开关，与浮条「不要再出现」双向同步。</li>
@@ -938,14 +968,16 @@
                 <li><strong>浮条提示修复</strong>：点「不要再出现」后现在会正常显示「可从控制台找到入口」提示，随即自动消失。</li>
                 <li><strong>画像展示精简</strong>：画像中不再出现任何私密归类相关内容，只展示场景偏好、任务偏好与环境问题。</li>
               </ul>
-              <h2 class="changelog-title" style="margin-top:14px;font-size:14px;color:var(--dim)">v1.4.6-test.14 更新说明【测试】</h2>
+              <details class="changelog-history">
+                <summary>查看全部更新记录</summary>
+                <div class="history-inner">
+<h3 class="history-version">v1.4.6-test.14 更新说明【测试】</h3>
               <p class="changelog-sub">2026-09-08 发布</p>
               <ul class="changelog-list">
                 <li><strong>体验改进计划页修复</strong>：修复二级页无法滑动查看画像的问题。</li>
                 <li><strong>邀请浮条优化</strong>：文案精简为「TensorHub邀请您加入《用户体验改进计划》」；星星图标与文本垂直居中；「不要再出现」后提示可从控制台找到入口并立即消失，关闭叉常驻右侧。</li>
                 <li><strong>控制台入口</strong>：描述文字精简。</li>
-              </ul>
-              <h2 class="changelog-title" style="margin-top:14px;font-size:14px;color:var(--dim)">v1.4.6-test.13 更新说明【测试】</h2>
+              </ul><h3 class="history-version">v1.4.6-test.13 更新说明【测试】</h3>
               <p class="changelog-sub">2026-09-08 发布</p>
               <ul class="changelog-list">
                 <li><strong>全新「用户体验改进计划」</strong>：控制台新增入口，Agent 对近 30 天会话做本地脱敏凝练，生成你的专属使用画像——场景偏好（大类+细分小类）、任务偏好、高频环境问题与缺陷；私密内容只归入「个人娱乐/私人信息处理」等类别，不展示细节。</li>
@@ -953,12 +985,7 @@
                 <li><strong>会话页邀请浮条</strong>：每天首次进会话显示一条小字浮条，可当天关闭、可「不要再出现」（之后可从控制台入口找回）；展开模型切换卡片时浮条自动被遮挡。</li>
                 <li><strong>画像每周自动更新</strong>：默认开启（可在计划页关闭），也支持手动「立即更新」（24 小时冷却）；画像纯展示不可修改。</li>
                 <li><strong>服务端配套</strong>：新增脱敏画像接收与归档接口，运营后台新增「用户画像」浏览页。</li>
-              </ul>
-
-              <details class="changelog-history">
-                <summary>查看全部更新记录</summary>
-                <div class="history-inner">
-<h3 class="history-version">v1.4.6-test.12 更新说明【测试】</h3>
+              </ul><h3 class="history-version">v1.4.6-test.12 更新说明【测试】</h3>
               <p class="changelog-sub">2026-09-08 发布</p>
               <ul class="changelog-list">
                 <li><strong>瀑布流提示居中</strong>：报错提示、中断提示与一键反馈卡片统一居中布局，报错改为红色软底胶囊样式。</li>
